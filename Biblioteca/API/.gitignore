@@ -5,3 +5,11 @@ node_modules/
 *.log
 dist/
 build/
+
+# Artefatos gerados
+coverage/
+_smoke_results.json
+_smoke_results.txt
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

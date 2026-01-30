@@ -1,0 +1,33 @@
+# Arquivos sensíveis
+**/.env
+**/.env.*
+
+# Logs
+**/*.log
+Biblioteca/logs/
+
+# Coverage / relatórios
+**/coverage/
+**/.coverage
+**/htmlcov/
+**/.pytest_cache/
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/*.egg-info/
+
+# Node
+**/node_modules/
+
+# Resultados de smoke tests
+**/_smoke_results.json
+**/_smoke_results.txt
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
