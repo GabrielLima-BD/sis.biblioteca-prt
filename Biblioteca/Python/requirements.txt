@@ -1,0 +1,39 @@
+# Dependências da Aplicação Python - Sistema de Biblioteca
+
+# Interface Gráfica
+customtkinter==5.2.0
+Pillow==10.0.0
+
+# HTTP Client
+requests==2.31.0
+urllib3==2.0.4
+
+# Configuração e Ambiente
+python-dotenv==1.0.0
+
+# Logging e Debugging
+python-json-logger==2.0.7
+
+# Testes (desenvolvimento)
+pytest==7.4.0
+pytest-cov==4.1.0
+pytest-mock==3.11.1
+pytest-asyncio==0.21.1
+
+# Linting e Formatação (desenvolvimento)
+pylint==2.17.5
+flake8==6.0.0
+black==23.7.0
+isort==5.12.0
+
+# Type Checking (desenvolvimento)
+mypy==1.4.1
+types-requests==2.31.0.2
+
+# Documentação (desenvolvimento)
+sphinx==7.1.2
+sphinx-rtd-theme==1.3.0
+
+# Qualidade de Código (desenvolvimento)
+coverage==7.2.0
+bandit==1.7.5

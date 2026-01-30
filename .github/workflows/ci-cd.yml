@@ -1,0 +1,234 @@
+name: CI/CD - Testes e Validação
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test-python:
+    name: Testes Python
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Instalar dependências
+      working-directory: ./Biblioteca/Python
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov pytest-mock
+    
+    - name: Lint com pylint
+      working-directory: ./Biblioteca/Python
+      continue-on-error: true
+      run: |
+        pip install pylint
+        pylint src/ tests/ --fail-under=8.0 || true
+    
+    - name: Executar testes unitários
+      working-directory: ./Biblioteca/Python
+      run: |
+        pytest tests/ -v --cov=src --cov-report=xml --cov-report=term
+    
+    - name: Upload cobertura Python
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./Biblioteca/Python/coverage.xml
+        flags: python
+        name: python-${{ matrix.python-version }}
+
+  test-api:
+    name: Testes API (Node.js)
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: ['16', '18', '20']
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: ./Biblioteca/API/package-lock.json
+    
+    - name: Instalar dependências
+      working-directory: ./Biblioteca/API
+      run: npm ci
+    
+    - name: Lint com ESLint
+      working-directory: ./Biblioteca/API
+      continue-on-error: true
+      run: |
+        npm run lint || true
+    
+    - name: Executar testes
+      working-directory: ./Biblioteca/API
+      run: npm test
+    
+    - name: Build da aplicação
+      working-directory: ./Biblioteca/API
+      run: |
+        npm run build || true
+    
+    - name: Upload cobertura Node.js
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./Biblioteca/API/coverage/coverage-final.json
+        flags: nodejs
+        name: nodejs-${{ matrix.node-version }}
+
+  docker-build:
+    name: Build Docker
+    runs-on: ubuntu-latest
+    needs: [test-python, test-api]
+    if: success()
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Build imagem Docker API
+      working-directory: ./Biblioteca/API
+      run: |
+        docker build -t biblioteca-api:latest .
+    
+    - name: Testar imagem Docker
+      run: |
+        docker run --rm biblioteca-api:latest npm --version
+
+  security-scan:
+    name: Verificação de Segurança
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Verificar dependências vulneráveis (Node.js)
+      working-directory: ./Biblioteca/API
+      continue-on-error: true
+      run: |
+        npm install
+        npm audit || true
+    
+    - name: Verificar dependências vulneráveis (Python)
+      working-directory: ./Biblioteca/Python
+      continue-on-error: true
+      run: |
+        pip install safety
+        safety check -r requirements.txt || true
+    
+    - name: SAST com Trivy
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+    
+    - name: Upload Trivy results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  quality-check:
+    name: Qualidade do Código
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Análise com SonarCloud
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      if: env.SONAR_TOKEN != ''
+      continue-on-error: true
+
+  deploy-dev:
+    name: Deploy Desenvolvimento
+    runs-on: ubuntu-latest
+    needs: [test-python, test-api, docker-build]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Fazer deploy para desenvolvimento
+      run: |
+        echo "Deploying to development environment..."
+        # TODO: Adicionar script de deploy para dev
+        # Exemplo: docker push app.azurecr.io/biblioteca:dev-${{ github.sha }}
+
+  deploy-prod:
+    name: Deploy Produção
+    runs-on: ubuntu-latest
+    needs: [test-python, test-api, docker-build, security-scan]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    environment:
+      name: production
+      url: https://api.biblioteca.com
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Criar release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          Alterações automáticas para esta versão
+        draft: false
+        prerelease: false
+    
+    - name: Fazer deploy para produção
+      run: |
+        echo "Deploying to production environment..."
+        # TODO: Adicionar script de deploy para produção
+        # Exemplo: docker push app.azurecr.io/biblioteca:latest
+
+  notify:
+    name: Notificar Resultado
+    runs-on: ubuntu-latest
+    needs: [test-python, test-api]
+    if: always()
+    
+    steps:
+    - name: Resultado dos testes
+      run: |
+        if [ "${{ needs.test-python.result }}" = "success" ] && [ "${{ needs.test-api.result }}" = "success" ]; then
+          echo "✅ Todos os testes passaram!"
+          exit 0
+        else
+          echo "❌ Alguns testes falharam"
+          exit 1
+        fi

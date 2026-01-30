@@ -1,0 +1,19 @@
+2026-01-05 10:23:57:2357 [31merror[39m: [31m[Erro ao buscar multas] Could not find a relationship between 'multa' and 'ReservaID' in the schema cache[39m
+2026-01-05 10:24:31:2431 [31merror[39m: [31m[Erro ao buscar multas] Could not find a relationship between 'multa' and 'ReservaID' in the schema cache[39m
+2026-01-05 10:25:45:2545 [31merror[39m: [31m[Erro ao buscar multas] Could not find a relationship between 'multa' and 'ReservaID' in the schema cache[39m
+2026-01-05 10:25:58:2558 [31merror[39m: [31m[Erro ao buscar multas] Could not find a relationship between 'multa' and 'ReservaID' in the schema cache[39m
+2026-01-05 10:27:30:2730 [31merror[39m: [31m[Erro ao buscar multas] Could not find a relationship between 'multa' and 'ReservaID' in the schema cache[39m
+2026-01-05 10:27:38:2738 [31merror[39m: [31m[Erro ao buscar multas] Could not find a relationship between 'multa' and 'ReservaID' in the schema cache[39m
+2026-01-05 10:28:07:287 [31merror[39m: [31m[Erro ao buscar multas] Could not find a relationship between 'multa' and 'ReservaID' in the schema cache[39m
+2026-01-05 10:44:04:444 [31merror[39m: [31m[Erro ao buscar multas] Could not find a relationship between 'multa' and 'ReservaID' in the schema cache[39m
+2026-01-05 10:44:24:4424 [31merror[39m: [31m[Erro ao buscar multas] Could not find a relationship between 'multa' and 'ReservaID' in the schema cache[39m
+2026-01-12 09:18:03:183 [31merror[39m: [31m[Erro ao criar gênero] null value in column "GeneroID" of relation "genero" violates not-null constraint[39m
+2026-01-12 09:18:04:184 [31merror[39m: [31m[Erro ao criar multa] Could not find the 'PendenciaID' column of 'multa' in the schema cache[39m
+2026-01-12 09:18:25:1825 [31merror[39m: [31m[Erro ao criar gênero] null value in column "GeneroID" of relation "genero" violates not-null constraint[39m
+2026-01-12 09:18:25:1825 [31merror[39m: [31m[Erro ao criar multa] Could not find the 'PendenciaID' column of 'multa' in the schema cache[39m
+2026-01-12 09:22:07:227 [31merror[39m: [31m[Erro ao criar multa] Could not find the 'ReservaID' column of 'multa' in the schema cache[39m
+2026-01-12 09:22:34:2234 [31merror[39m: [31m[Erro ao criar multa] Could not find the 'ReservaID' column of 'multa' in the schema cache[39m
+2026-01-12 09:22:52:2252 [31merror[39m: [31m[Erro ao criar multa] Could not find the 'ReservaID' column of 'multa' in the schema cache[39m
+2026-01-12 10:25:44:2544 [31merror[39m: [31m[Erro ao criar multa] Could not find the 'ReservaID' column of 'multa' in the schema cache[39m
+2026-01-12 10:33:20:3320 [31merror[39m: [31m[Erro ao criar multa] Could not find the 'data_vencimento' column of 'multa' in the schema cache[39m
+2026-01-12 10:35:22:3522 [31merror[39m: [31m[Erro ao criar multa] null value in column "MultaID" of relation "multa" violates not-null constraint[39m

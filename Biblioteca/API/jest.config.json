@@ -1,0 +1,26 @@
+{
+  "testEnvironment": "node",
+  "coverageDirectory": "coverage",
+  "collectCoverageFrom": [
+    "validators.js",
+    "auth/**/*.js",
+    "middleware/**/*.js",
+    "utils/**/*.js",
+    "!node_modules/**",
+    "!coverage/**",
+    "!jest.config.json",
+    "!.eslintrc.json",
+    "!server.js"
+  ],
+  "testMatch": [
+    "**/__tests__/**/*.test.js"
+  ],
+  "verbose": true,
+  "testTimeout": 10000,
+  "coverageReporters": [
+    "text",
+    "lcov",
+    "html",
+    "json"
+  ]
+}

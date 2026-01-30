@@ -1,0 +1,34 @@
+[run]
+# Configuração do coverage para Python
+source = src
+omit =
+    */tests/*
+    */test_*.py
+    */__pycache__/*
+    */venv/*
+    */site-packages/*
+
+[report]
+# Relatório de cobertura
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+    @abstractproperty
+    class .*\(Protocol\):
+
+precision = 2
+skip_covered = False
+sort = Cover
+
+[html]
+# Relatório HTML
+directory = htmlcov
+
+[xml]
+# Relatório XML para CI/CD
+output = coverage.xml
