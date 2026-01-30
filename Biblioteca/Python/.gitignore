@@ -1,7 +1,6 @@
 .env
 .env.local
 .env.*.local
-src/
 venv/
 __pycache__/
 *.pyc
