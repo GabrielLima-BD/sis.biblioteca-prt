@@ -2,24 +2,11 @@ version: '3.8'
 
 services:
   api:
-    build: ./API
+    build: ./Biblioteca/API
     ports:
       - "3000:3000"
     environment:
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_KEY}
       - NODE_ENV=development
-    volumes:
-      - ./API:/app
-    restart: unless-stopped
-
-  python-app:
-    image: python:3.11-slim
-    working_dir: /app
-    volumes:
-      - ./Python:/app
-    environment:
-      - API_BASE_URL=http://api:3000
-    depends_on:
-      - api
     restart: unless-stopped
